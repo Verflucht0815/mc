@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DaKoolKidz - ATM10 Server Status</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Press Start 2P', cursive; background: #0f172a; color: #22c55e; }
+    .minecraft { text-shadow: 3px 3px 0 #000; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+  <div class="max-w-md w-full bg-zinc-900 border-4 border-green-500 p-8 rounded-2xl shadow-2xl text-center">
+    <h1 class="text-3xl mb-6 text-yellow-400 minecraft">DaKoolKidz</h1>
+    <div class="text-xl mb-4 text-green-300">All the Mods 10 v5.5</div>
+    
+    <div id="status" class="text-2xl mb-8 font-bold"></div>
+    
+    <div class="bg-black border-2 border-green-600 p-6 rounded-xl mb-6">
+      <div class="text-sm text-zinc-400 mb-2">Spieler online</div>
+      <div id="players" class="text-6xl font-bold text-white">—</div>
+      <div id="max" class="text-sm text-zinc-500">/ —</div>
+    </div>
+
+    <div id="motd" class="text-sm text-yellow-300 italic min-h-[4em] whitespace-pre-wrap"></div>
+
+    <div class="mt-8 text-xs text-zinc-500">
+      Zuletzt aktualisiert: <span id="time"></span><br>
+      <button onclick="refresh()" class="mt-3 text-xs underline hover:text-green-400">Jetzt aktualisieren</button>
+    </div>
+  </div>
+
+  <script>
+    const SERVER = "94.114.156.16";  // Deine IP – Port 25565 ist Default
+
+    async function update() {
+      try {
+        const res = await fetch(`https://api.mcsrvstat.us/2/${SERVER}`);
+        if (!res.ok) throw new Error("API Antwort nicht OK");
+
+        const data = await res.json();
+
+        document.getElementById("time").textContent = new Date().toLocaleTimeString("de-DE");
+
+        if (data.online === true) {
+          document.getElementById("status").innerHTML = 
+            `<span class="text-green-400">● ONLINE</span>`;
+          document.getElementById("players").textContent = data.players.online;
+          document.getElementById("max").textContent = `/ ${data.players.max}`;
+          document.getElementById("motd").innerHTML = data.motd.clean.join("<br>");
+        } else {
+          document.getElementById("status").innerHTML = 
+            `<span class="text-red-500">● OFFLINE</span>`;
+          document.getElementById("players").textContent = "0";
+          document.getElementById("max").textContent = "/ —";
+          document.getElementById("motd").textContent = "Server gerade nicht erreichbar";
+        }
+      } catch (e) {
+        console.error(e);
+        document.getElementById("status").innerHTML = `<span class="text-red-500">● FEHLER</span>`;
+        document.getElementById("players").textContent = "—";
+        document.getElementById("motd").textContent = "API oder Netzwerkproblem – versuch später";
+      }
+    }
+
+    function refresh() {
+      document.getElementById("players").textContent = "…";
+      update();
+    }
+
+    // Sofort laden + alle 10 Sekunden refresh
+    setInterval(update, 10000);
+    update();
+  </script>
+</body>
+</html>
