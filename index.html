@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -5,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DaKoolKidz - ATM10 Server Status</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- Favicon wird dynamisch gesetzt -->
   <style>
     :root {
       --bg: #000;
@@ -12,6 +14,19 @@
       --accent: #fbbf24;
       --gray: #71717a;
       --light: #86efac;
+      --players-low: #ef4444;
+      --players-med: #fbbf24;
+      --players-high: #22c55e;
+    }
+    [data-theme="light"] {
+      --bg: #e0f2e9;
+      --text: #1e40af;
+      --accent: #ea580c;
+      --gray: #4b5563;
+      --light: #10b981;
+      --players-low: #dc2626;
+      --players-med: #d97706;
+      --players-high: #059669;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -24,20 +39,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.5s ease;
     }
 
-    /* Sterne & Planeten bleiben gleich – nur kurz gekürzt */
-    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    /* Sterne nur im Dark-Mode sichtbar */
+    .stars { display: none; position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    [data-theme="dark"] .stars { display: block; }
+
     .stars1, .stars2, .stars3 { position: absolute; inset: 0; background: transparent; animation: drift linear infinite; }
     .stars1 { width: 1px; height: 1px; box-shadow: 1200px 400px #fff, 300px 900px #fff, 1800px 200px #fff, 600px 1200px #fff, 1500px 700px #fff, 200px 300px #fff, 900px 1600px #fff, 400px 800px #fff, 1700px 500px #fff, 100px 1400px #fff; opacity: 0.9; animation-duration: 150s; }
     .stars2 { width: 2px; height: 2px; box-shadow: 800px 600px #eee, 1400px 300px #ddd, 500px 1100px #fff, 1600px 900px #ccc, 200px 1700px #eee, 1000px 400px #fff; opacity: 0.7; animation-duration: 220s; }
     .stars3 { width: 3px; height: 3px; box-shadow: 400px 200px #aaa, 1300px 800px #bbb, 700px 1500px #ccc, 1900px 100px #ddd; opacity: 0.5; animation-duration: 300s; }
     @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-2500px); } }
 
-    .shooting-star { position: absolute; width: 4px; height: 4px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px #fff; animation: shoot linear infinite; opacity: 0; }
+    /* Shooting Stars nur dark */
+    .shooting-star { display: none; position: absolute; width: 4px; height: 4px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px #fff; animation: shoot linear infinite; opacity: 0; }
+    [data-theme="dark"] .shooting-star { display: block; }
     @keyframes shoot { 0% { transform: translate(-100vw, -100vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(200vw, 200vh); opacity: 0; } }
 
-    .planet { position: fixed; border-radius: 50%; z-index: 0; pointer-events: none; }
+    /* Planeten nur dark */
+    .planet { display: none; position: fixed; border-radius: 50%; z-index: 0; pointer-events: none; }
+    [data-theme="dark"] .planet { display: block; }
+
     #p1 { width: 90px; height: 90px; background: radial-gradient(#4af, #006); top: 15%; left: -120px; animation: planet1 200s linear infinite; box-shadow: 0 0 40px #0af; }
     #p1::after { content: ''; position: absolute; inset: -20px; border: 8px solid rgba(255,255,255,0.2); border-radius: 50%; transform: rotate(30deg); }
     #p2 { width: 60px; height: 60px; background: radial-gradient(#f66, #800); top: 70%; right: -80px; animation: planet2 280s linear infinite; box-shadow: 0 0 30px #f33; }
@@ -46,7 +69,7 @@
     @keyframes planet2 { 0% { transform: translateX(0); } 100% { transform: translateX(-220vw); } }
     @keyframes planet3 { 0% { transform: translate(0,0); } 100% { transform: translate(180vw, 120vh); } }
 
-    /* Content – Abstände reduziert */
+    /* Content */
     .container {
       position: relative;
       z-index: 1;
@@ -55,16 +78,21 @@
       background: rgba(24,24,27,0.88);
       border: 4px solid var(--text);
       border-radius: 16px;
-      padding: 24px 20px;           /* Padding etwas kleiner */
+      padding: 24px 20px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.8);
       text-align: center;
       backdrop-filter: blur(6px);
-      transition: transform 0.4s ease;
+      transition: all 0.5s ease;
     }
-    .container:hover { transform: scale(1.02); }
+    [data-theme="light"] .container {
+      background: rgba(255,255,255,0.92);
+      border-color: #16a34a;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
 
     #icon { width: 80px; height: 80px; border-radius: 12px; margin: 0 auto 12px; display: block; border: 2px solid var(--gray); }
     h1 { font-size: 2.8rem; color: var(--accent); text-shadow: 4px 4px 0 #000; margin-bottom: 12px; }
+    [data-theme="light"] h1 { text-shadow: 2px 2px 0 #fff; }
 
     #status { font-size: 1.9rem; font-weight: bold; margin: 12px 0 20px; min-height: 35px; }
     #status.online { animation: pulse 4s infinite; }
@@ -74,23 +102,58 @@
       background: rgba(0,0,0,0.6);
       border: 3px solid var(--text);
       border-radius: 12px;
-      padding: 16px;               /* Padding kleiner */
-      margin: 16px 0;              /* Margin reduziert */
+      padding: 16px;
+      margin: 16px 0;
       transition: all 0.3s;
     }
+    [data-theme="light"] .players-box { background: rgba(255,255,255,0.7); border-color: #16a34a; }
+
     .players-box:hover { transform: scale(1.06); border-color: var(--accent); box-shadow: 0 0 30px rgba(251,191,36,0.4); }
     .players-label { font-size: 1.1rem; color: var(--gray); margin-bottom: 8px; }
-    .players-display { font-size: 5rem; color: white; display: flex; align-items: center; justify-content: center; gap: 16px; }
+    .players-display { font-size: 5rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 16px; transition: color 0.4s; }
     .slash { font-size: 3.5rem; color: var(--gray); }
 
     #motd { font-size: 1rem; color: #fef08a; line-height: 1.7; margin: 12px 0; white-space: pre-wrap; word-break: break-word; }
-    #motd span { font-family: inherit; }
+    [data-theme="light"] #motd { color: #92400e; }
 
-    .extra-info { 
-      font-size: 0.9rem; 
-      color: var(--gray); 
-      margin: 12px 0;              /* Margin kleiner – das war der große Abstand */
-      line-height: 1.6;
+    .extra-info { font-size: 0.9rem; color: var(--gray); margin: 12px 0; line-height: 1.6; }
+    [data-theme="light"] .extra-info { color: #374151; }
+
+    .ip-box {
+      background: rgba(0,0,0,0.5);
+      border: 2px solid var(--gray);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 12px 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    [data-theme="light"] .ip-box { background: rgba(255,255,255,0.8); border-color: #6b7280; }
+
+    .copy-small {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-small:hover { background: #f59e0b; }
+
+    .theme-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      z-index: 10;
     }
 
     .join-btn {
@@ -107,6 +170,7 @@
     .join-btn:hover { transform: scale(1.1); box-shadow: 0 0 25px var(--accent); }
 
     .footer { font-size: 0.8rem; color: var(--gray); margin-top: 16px; }
+    [data-theme="light"] .footer { color: #4b5563; }
 
     @media (max-width: 500px) {
       .players-display { font-size: 3.8rem; }
@@ -115,7 +179,9 @@
     }
   </style>
 </head>
-<body>
+<body data-theme="dark">
+  <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+
   <div class="stars">
     <div class="stars1"></div>
     <div class="stars2"></div>
@@ -149,12 +215,23 @@
 
     <div id="motd"></div>
 
+    <div class="ip-box">
+      <span>IP: <span id="server-ip-display">94.114.156.16</span>:<span id="server-port-display">25565</span></span>
+      <button class="copy-small" onclick="copyIP(true)">Kopieren</button>
+    </div>
+
     <div class="extra-info">
-      Ping: <span id="latency">—</span> ms (vom API-Server gemessen)<br>
+      Ping (API): <span id="latency">—</span> ms<br>
+      Ping (Browser): <span id="browser-ping">—</span> ms<br>
       Version: <span id="version">—</span>
     </div>
 
-    <button class="join-btn" onclick="copyIP()">ZUM SERVER (IP kopieren)</button>
+    <label style="display:block; margin:12px 0; font-size:0.9rem;">
+      <input type="checkbox" id="auto-refresh" checked onchange="toggleAutoRefresh(this.checked)">
+      Auto-Update alle 30s
+    </label>
+
+    <button class="join-btn" onclick="copyIP(false)">ZUM SERVER (IP kopieren)</button>
 
     <div class="footer">
       Zuletzt aktualisiert: <span id="time"></span><br>
@@ -166,6 +243,37 @@
   <script>
     const SERVER = "94.114.156.16";
     let serverPort = 25565;
+    let autoRefreshInterval = null;
+    let lastPlayers = -1;
+
+    function toggleTheme() {
+      const body = document.body;
+      const current = body.getAttribute("data-theme");
+      const newTheme = current === "dark" ? "light" : "dark";
+      body.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+
+      // Favicon anpassen (optional: anderes Icon für Light)
+      const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+      link.type = "image/png";
+      link.rel = "icon";
+      link.href = document.getElementById("icon").src; // nutzt dasselbe Icon
+      document.head.appendChild(link);
+    }
+
+    // Theme beim Laden wiederherstellen
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    document.body.setAttribute("data-theme", savedTheme);
+
+    async function measureBrowserPing() {
+      const start = performance.now();
+      try {
+        await fetch(`http://${SERVER}:${serverPort}`, { mode: 'no-cors', cache: 'no-store' });
+      } catch {} // Fehler ignorieren
+      const end = performance.now();
+      const ping = Math.round(end - start);
+      document.getElementById("browser-ping").textContent = ping < 500 ? ping : "—"; // Cap bei unrealistisch hohen Werten
+    }
 
     async function update() {
       try {
@@ -177,36 +285,67 @@
         document.getElementById("countdown").textContent = "30";
 
         const statusEl = document.getElementById("status");
+        const playersEl = document.getElementById("players");
+        const playersDisplay = document.querySelector(".players-display");
+
         if (data.online) {
           statusEl.innerHTML = 'STATUS: <span style="color:#22c55e">ONLINE</span>';
           statusEl.classList.add('online');
 
-          document.getElementById("players").textContent = data.players.online;
-          document.getElementById("max").textContent = data.players.max;
+          const online = data.players.online;
+          const max = data.players.max;
+          playersEl.textContent = online;
+          document.getElementById("max").textContent = max;
 
-          // MOTD: Stärker filtern
+          // Dynamische Farbe
+          let colorVar;
+          const percent = online / max;
+          if (percent === 0) colorVar = "var(--players-low)";
+          else if (percent < 0.3) colorVar = "var(--players-low)";
+          else if (percent < 0.7) colorVar = "var(--players-med)";
+          else colorVar = "var(--players-high)";
+          playersDisplay.style.color = colorVar;
+
+          // MOTD filtern
           let motdText = "";
           if (data.motd && data.motd.html) {
             motdText = data.motd.html.join("<br>")
-              .replace(/<[^>]*>/g, '')                      // Alle HTML-Tags raus
-              .replace(/[═─=-]{3,}/g, '')                    // Lange Linien raus
-              .replace(/DaKoolKidz|DaKool|ATM10|v5\.5/gi, '') // Deine Texte raus
-              .replace(/\s+/g, ' ')                          // Mehrere Leerzeichen zu einem
+              .replace(/<[^>]*>/g, '')
+              .replace(/[═─=-]{3,}/g, '')
+              .replace(/DaKoolKidz|DaKool|ATM10|v5\.5/gi, '')
+              .replace(/\s+/g, ' ')
               .trim();
           }
           document.getElementById("motd").innerHTML = motdText || "";
 
-          if (data.icon) document.getElementById("icon").src = data.icon;
+          if (data.icon) {
+            document.getElementById("icon").src = data.icon;
+            // Favicon setzen
+            const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+            link.type = "image/png";
+            link.rel = "icon";
+            link.href = data.icon;
+            document.head.appendChild(link);
+          }
 
           document.getElementById("latency").textContent = data.debug?.ping ? Math.round(data.debug.ping) : "—";
           document.getElementById("version").textContent = data.version || "—";
 
-          if (data.port && data.port !== 25565) serverPort = data.port;
+          if (data.port && data.port !== 25565) {
+            serverPort = data.port;
+            document.getElementById("server-port-display").textContent = serverPort;
+          }
+          document.getElementById("server-ip-display").textContent = SERVER;
+
+          // Browser-Ping messen
+          measureBrowserPing();
+
         } else {
           statusEl.innerHTML = 'STATUS: <span style="color:#ef4444">OFFLINE</span>';
           statusEl.classList.remove('online');
-          document.getElementById("players").textContent = "0";
+          playersEl.textContent = "0";
           document.getElementById("max").textContent = "—";
+          playersDisplay.style.color = "var(--players-low)";
           document.getElementById("motd").innerHTML = "Server nicht erreichbar";
           document.getElementById("latency").textContent = "—";
           document.getElementById("version").textContent = "—";
@@ -226,23 +365,38 @@
       update();
     }
 
-    function copyIP() {
+    function copyIP(small = false) {
       let toCopy = SERVER;
       if (serverPort !== 25565) toCopy += ":" + serverPort;
       navigator.clipboard.writeText(toCopy).then(() => {
-        alert("IP kopiert: " + toCopy + "\nFüge sie in Minecraft hinzu!");
+        alert("IP kopiert: " + toCopy + (small ? "" : "\nFüge sie in Minecraft hinzu!"));
       }).catch(() => {
         alert("Kopieren fehlgeschlagen – manuell: " + toCopy);
       });
     }
 
+    function toggleAutoRefresh(enabled) {
+      if (enabled) {
+        if (!autoRefreshInterval) {
+          autoRefreshInterval = setInterval(update, 30000);
+        }
+      } else {
+        if (autoRefreshInterval) {
+          clearInterval(autoRefreshInterval);
+          autoRefreshInterval = null;
+        }
+      }
+    }
+
+    // Countdown
     setInterval(() => {
       let cd = parseInt(document.getElementById("countdown").textContent);
       if (cd > 0) document.getElementById("countdown").textContent = cd - 1;
     }, 1000);
 
-    setInterval(update, 30000);
-    update();
+    // Auto-Refresh standardmäßig an
+    toggleAutoRefresh(true);
+    update(); // Sofort starten
   </script>
 </body>
 </html>
