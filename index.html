@@ -26,7 +26,7 @@
       justify-content: center;
     }
 
-    /* Sterne Layers */
+    /* Sterne & Planeten bleiben gleich – nur kurz gekürzt */
     .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     .stars1, .stars2, .stars3 { position: absolute; inset: 0; background: transparent; animation: drift linear infinite; }
     .stars1 { width: 1px; height: 1px; box-shadow: 1200px 400px #fff, 300px 900px #fff, 1800px 200px #fff, 600px 1200px #fff, 1500px 700px #fff, 200px 300px #fff, 900px 1600px #fff, 400px 800px #fff, 1700px 500px #fff, 100px 1400px #fff; opacity: 0.9; animation-duration: 150s; }
@@ -34,24 +34,9 @@
     .stars3 { width: 3px; height: 3px; box-shadow: 400px 200px #aaa, 1300px 800px #bbb, 700px 1500px #ccc, 1900px 100px #ddd; opacity: 0.5; animation-duration: 300s; }
     @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-2500px); } }
 
-    /* Shooting Stars */
-    .shooting-star {
-      position: absolute;
-      width: 4px; height: 4px;
-      background: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 20px #fff;
-      animation: shoot linear infinite;
-      opacity: 0;
-    }
-    @keyframes shoot {
-      0% { transform: translate(-100vw, -100vh); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translate(200vw, 200vh); opacity: 0; }
-    }
+    .shooting-star { position: absolute; width: 4px; height: 4px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px #fff; animation: shoot linear infinite; opacity: 0; }
+    @keyframes shoot { 0% { transform: translate(-100vw, -100vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(200vw, 200vh); opacity: 0; } }
 
-    /* Planeten */
     .planet { position: fixed; border-radius: 50%; z-index: 0; pointer-events: none; }
     #p1 { width: 90px; height: 90px; background: radial-gradient(#4af, #006); top: 15%; left: -120px; animation: planet1 200s linear infinite; box-shadow: 0 0 40px #0af; }
     #p1::after { content: ''; position: absolute; inset: -20px; border: 8px solid rgba(255,255,255,0.2); border-radius: 50%; transform: rotate(30deg); }
@@ -61,7 +46,7 @@
     @keyframes planet2 { 0% { transform: translateX(0); } 100% { transform: translateX(-220vw); } }
     @keyframes planet3 { 0% { transform: translate(0,0); } 100% { transform: translate(180vw, 120vh); } }
 
-    /* Content */
+    /* Content – Abstände reduziert */
     .container {
       position: relative;
       z-index: 1;
@@ -70,7 +55,7 @@
       background: rgba(24,24,27,0.88);
       border: 4px solid var(--text);
       border-radius: 16px;
-      padding: 32px 24px;
+      padding: 24px 20px;           /* Padding etwas kleiner */
       box-shadow: 0 15px 40px rgba(0,0,0,0.8);
       text-align: center;
       backdrop-filter: blur(6px);
@@ -78,9 +63,10 @@
     }
     .container:hover { transform: scale(1.02); }
 
-    h1 { font-size: 2.8rem; color: var(--accent); text-shadow: 4px 4px 0 #000; margin-bottom: 20px; }
-    #icon { width: 80px; height: 80px; border-radius: 12px; margin: 0 auto 16px; display: block; border: 2px solid var(--gray); }
-    #status { font-size: 1.9rem; font-weight: bold; margin: 16px 0 24px; min-height: 35px; }
+    #icon { width: 80px; height: 80px; border-radius: 12px; margin: 0 auto 12px; display: block; border: 2px solid var(--gray); }
+    h1 { font-size: 2.8rem; color: var(--accent); text-shadow: 4px 4px 0 #000; margin-bottom: 12px; }
+
+    #status { font-size: 1.9rem; font-weight: bold; margin: 12px 0 20px; min-height: 35px; }
     #status.online { animation: pulse 4s infinite; }
     @keyframes pulse { 0%,100% { text-shadow: 0 0 15px var(--text); } 50% { text-shadow: 0 0 30px var(--light); } }
 
@@ -88,24 +74,24 @@
       background: rgba(0,0,0,0.6);
       border: 3px solid var(--text);
       border-radius: 12px;
-      padding: 20px;
-      margin: 24px 0;
+      padding: 16px;               /* Padding kleiner */
+      margin: 16px 0;              /* Margin reduziert */
       transition: all 0.3s;
     }
     .players-box:hover { transform: scale(1.06); border-color: var(--accent); box-shadow: 0 0 30px rgba(251,191,36,0.4); }
-    .players-label { font-size: 1.1rem; color: var(--gray); margin-bottom: 12px; }
+    .players-label { font-size: 1.1rem; color: var(--gray); margin-bottom: 8px; }
     .players-display { font-size: 5rem; color: white; display: flex; align-items: center; justify-content: center; gap: 16px; }
     .slash { font-size: 3.5rem; color: var(--gray); }
 
-    #motd { font-size: 1rem; color: #fef08a; line-height: 1.7; margin: 20px 0; white-space: pre-wrap; word-break: break-word; }
+    #motd { font-size: 1rem; color: #fef08a; line-height: 1.7; margin: 12px 0; white-space: pre-wrap; word-break: break-word; }
     #motd span { font-family: inherit; }
 
-    #players-list { margin: 20px 0; font-size: 0.9rem; color: var(--light); max-height: 120px; overflow-y: auto; }
-    #players-list ul { list-style: none; text-align: left; }
-    #players-list li { margin: 6px 0; }
-
-    .extra-info { font-size: 0.9rem; color: var(--gray); margin: 16px 0; }
-    #countdown { color: var(--accent); font-weight: bold; }
+    .extra-info { 
+      font-size: 0.9rem; 
+      color: var(--gray); 
+      margin: 12px 0;              /* Margin kleiner – das war der große Abstand */
+      line-height: 1.6;
+    }
 
     .join-btn {
       background: var(--accent);
@@ -115,12 +101,12 @@
       font-size: 1.2rem;
       border-radius: 12px;
       cursor: pointer;
-      margin: 20px 0 10px;
+      margin: 16px 0 8px;
       transition: all 0.3s;
     }
     .join-btn:hover { transform: scale(1.1); box-shadow: 0 0 25px var(--accent); }
 
-    .footer { font-size: 0.8rem; color: var(--gray); margin-top: 20px; }
+    .footer { font-size: 0.8rem; color: var(--gray); margin-top: 16px; }
 
     @media (max-width: 500px) {
       .players-display { font-size: 3.8rem; }
@@ -136,7 +122,6 @@
     <div class="stars3"></div>
   </div>
 
-  <!-- Shooting Stars (5 zufällige) -->
   <div class="shooting-star" style="top:10%; left:0; animation-delay:5s; animation-duration:6s;"></div>
   <div class="shooting-star" style="top:40%; left:0; animation-delay:15s; animation-duration:5s;"></div>
   <div class="shooting-star" style="top:70%; left:0; animation-delay:25s; animation-duration:7s;"></div>
@@ -148,7 +133,7 @@
   <div class="planet" id="p3"></div>
 
   <div class="container">
-    <img id="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" alt="Server Icon" crossorigin="anonymous">
+    <img id="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" alt="Server Icon">
     <h1>DaKoolKidz</h1>
 
     <div id="status"></div>
@@ -164,12 +149,9 @@
 
     <div id="motd"></div>
 
-    <div id="players-list"><ul id="player-ul"></ul></div>
-
     <div class="extra-info">
-      Ping: <span id="latency">—</span> ms<br>
-      Version: <span id="version">—</span><br>
-      <span id="uptime-est">Online seit unbekannt</span>
+      Ping: <span id="latency">—</span> ms (vom API-Server gemessen)<br>
+      Version: <span id="version">—</span>
     </div>
 
     <button class="join-btn" onclick="copyIP()">ZUM SERVER (IP kopieren)</button>
@@ -183,7 +165,7 @@
 
   <script>
     const SERVER = "94.114.156.16";
-    let lastOnlineTime = null; // Für grobe "Online seit"
+    let serverPort = 25565;
 
     async function update() {
       try {
@@ -198,53 +180,43 @@
         if (data.online) {
           statusEl.innerHTML = 'STATUS: <span style="color:#22c55e">ONLINE</span>';
           statusEl.classList.add('online');
-          if (!lastOnlineTime) lastOnlineTime = Date.now();
+
           document.getElementById("players").textContent = data.players.online;
           document.getElementById("max").textContent = data.players.max;
-          document.getElementById("motd").innerHTML = data.motd?.html?.join("<br>") || "Kein MOTD";
 
-          // Icon
+          // MOTD: Stärker filtern
+          let motdText = "";
+          if (data.motd && data.motd.html) {
+            motdText = data.motd.html.join("<br>")
+              .replace(/<[^>]*>/g, '')                      // Alle HTML-Tags raus
+              .replace(/[═─=-]{3,}/g, '')                    // Lange Linien raus
+              .replace(/DaKoolKidz|DaKool|ATM10|v5\.5/gi, '') // Deine Texte raus
+              .replace(/\s+/g, ' ')                          // Mehrere Leerzeichen zu einem
+              .trim();
+          }
+          document.getElementById("motd").innerHTML = motdText || "";
+
           if (data.icon) document.getElementById("icon").src = data.icon;
 
-          // Latency
           document.getElementById("latency").textContent = data.debug?.ping ? Math.round(data.debug.ping) : "—";
+          document.getElementById("version").textContent = data.version || "—";
 
-          // Version
-          document.getElementById("version").textContent = data.version || data.protocol_name || "—";
-
-          // Spielerliste (wenn vorhanden)
-          const listEl = document.getElementById("player-ul");
-          listEl.innerHTML = "";
-          if (data.players.list && data.players.list.length > 0) {
-            data.players.list.forEach(p => {
-              const li = document.createElement("li");
-              li.textContent = p.name || p;
-              listEl.appendChild(li);
-            });
-          } else {
-            listEl.innerHTML = "<li>(keine Namen sichtbar – Query deaktiviert?)</li>";
-          }
-
-          // Online seit (geschätzt)
-          const mins = Math.floor((Date.now() - lastOnlineTime) / 60000);
-          document.getElementById("uptime-est").textContent = `Online seit ca. ${mins} Min`;
+          if (data.port && data.port !== 25565) serverPort = data.port;
         } else {
           statusEl.innerHTML = 'STATUS: <span style="color:#ef4444">OFFLINE</span>';
           statusEl.classList.remove('online');
           document.getElementById("players").textContent = "0";
           document.getElementById("max").textContent = "—";
-          document.getElementById("motd").textContent = "Server nicht erreichbar";
+          document.getElementById("motd").innerHTML = "Server nicht erreichbar";
           document.getElementById("latency").textContent = "—";
           document.getElementById("version").textContent = "—";
-          document.getElementById("player-ul").innerHTML = "";
-          document.getElementById("uptime-est").textContent = "Offline";
-          lastOnlineTime = null;
         }
       } catch (e) {
         console.error(e);
         document.getElementById("status").innerHTML = 'STATUS: <span style="color:#ef4444">FEHLER</span>';
         document.getElementById("players").textContent = "—";
         document.getElementById("max").textContent = "—";
+        document.getElementById("motd").innerHTML = "";
       }
     }
 
@@ -255,19 +227,22 @@
     }
 
     function copyIP() {
-      navigator.clipboard.writeText(SERVER).then(() => {
-        alert("IP kopiert: " + SERVER + "\nFüge sie in Minecraft hinzu!");
-      }).catch(() => alert("Kopieren fehlgeschlagen – manuell kopieren: " + SERVER));
+      let toCopy = SERVER;
+      if (serverPort !== 25565) toCopy += ":" + serverPort;
+      navigator.clipboard.writeText(toCopy).then(() => {
+        alert("IP kopiert: " + toCopy + "\nFüge sie in Minecraft hinzu!");
+      }).catch(() => {
+        alert("Kopieren fehlgeschlagen – manuell: " + toCopy);
+      });
     }
 
-    // Countdown
     setInterval(() => {
       let cd = parseInt(document.getElementById("countdown").textContent);
       if (cd > 0) document.getElementById("countdown").textContent = cd - 1;
     }, 1000);
 
     setInterval(update, 30000);
-    update(); // Start
+    update();
   </script>
 </body>
 </html>
