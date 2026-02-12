@@ -18,7 +18,7 @@
       padding: 20px;
     }
     .container {
-      max-width: 480px;
+      max-width: 500px;
       width: 100%;
       background: #18181b;
       border: 4px solid #22c55e;
@@ -28,15 +28,15 @@
       text-align: center;
     }
     h1 {
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       color: #fbbf24;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       text-shadow: 3px 3px 0 #000;
     }
     .subtitle {
       font-size: 1.1rem;
       color: #86efac;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
     #status {
       font-size: 1.8rem;
@@ -48,63 +48,70 @@
       background: #000;
       border: 2px solid #22c55e;
       border-radius: 12px;
-      padding: 24px 16px;
+      padding: 20px;
       margin-bottom: 24px;
     }
     .players-label {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #a1a1aa;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
-    #players {
-      font-size: 4.5rem;
+    .players-display {
+      font-size: 4.2rem;
       font-weight: bold;
       color: white;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    #max {
-      font-size: 1rem;
+    .slash {
+      font-size: 3rem;
       color: #71717a;
     }
     #motd {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: #fef08a;
-      line-height: 1.5;
+      line-height: 1.6;
       min-height: 60px;
       white-space: pre-wrap;
       word-wrap: break-word;
     }
     .footer {
       margin-top: 32px;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: #71717a;
     }
     button {
       background: none;
       border: none;
       color: #86efac;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       text-decoration: underline;
       cursor: pointer;
     }
     button:hover { color: #22c55e; }
     @media (max-width: 400px) {
-      h1 { font-size: 1.8rem; }
-      #players { font-size: 3.8rem; }
+      h1 { font-size: 2rem; }
+      .players-display { font-size: 3.5rem; }
+      .slash { font-size: 2.5rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>DaKoolKidz</h1>
-    <div class="subtitle">All the Mods 10 v5.5</div>
+    <div class="subtitle">ATM10 v5.5</div>
     
     <div id="status"></div>
     
     <div class="players-box">
       <div class="players-label">Spieler online</div>
-      <div id="players">—</div>
-      <div id="max">/ —</div>
+      <div class="players-display">
+        <span id="players">—</span>
+        <span class="slash">/</span>
+        <span id="max">—</span>
+      </div>
     </div>
 
     <div id="motd"></div>
@@ -121,7 +128,7 @@
     async function update() {
       try {
         const res = await fetch(`https://api.mcsrvstat.us/2/${SERVER}`);
-        if (!res.ok) throw new Error("API nicht OK");
+        if (!res.ok) throw new Error("API Fehler");
 
         const data = await res.json();
 
@@ -130,29 +137,37 @@
         if (data.online === true) {
           document.getElementById("status").innerHTML = '<span style="color:#22c55e">● ONLINE</span>';
           document.getElementById("players").textContent = data.players.online;
-          document.getElementById("max").textContent = `/ ${data.players.max}`;
-          document.getElementById("motd").innerHTML = data.motd?.clean?.join("<br>") || "Kein MOTD";
+          document.getElementById("max").textContent = data.players.max;
+
+          // MOTD ohne die Rahmen-Linien (═) – wir nehmen nur clean und filtern unnötige Leerzeilen
+          let motdText = (data.motd?.clean || []).join("\n").trim();
+          motdText = motdText.replace(/[=─═]+/g, ''); // Entfernt alle Block-Linien
+          motdText = motdText.replace(/\s+/g, ' ').trim(); // Entfernt überflüssige Leerzeichen
+          document.getElementById("motd").textContent = motdText || "Kein MOTD";
         } else {
           document.getElementById("status").innerHTML = '<span style="color:#ef4444">● OFFLINE</span>';
           document.getElementById("players").textContent = "0";
-          document.getElementById("max").textContent = "/ —";
+          document.getElementById("max").textContent = "—";
           document.getElementById("motd").textContent = "Server gerade nicht erreichbar";
         }
       } catch (e) {
         console.error(e);
         document.getElementById("status").innerHTML = '<span style="color:#ef4444">● FEHLER</span>';
         document.getElementById("players").textContent = "—";
+        document.getElementById("max").textContent = "—";
         document.getElementById("motd").textContent = "Problem mit API/Netzwerk";
       }
     }
 
     function refresh() {
       document.getElementById("players").textContent = "…";
+      document.getElementById("max").textContent = "…";
       update();
     }
 
-    setInterval(update, 10000);
-    update();
+    // Alle 30 Sekunden – besserer Kompromiss zwischen Frische und API-Limit
+    setInterval(update, 30000);
+    update(); // Sofort beim Laden
   </script>
 </body>
 </html>
