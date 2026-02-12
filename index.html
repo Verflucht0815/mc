@@ -9,29 +9,128 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Press Start 2P', cursive;
-      background: #0f172a;
+      background: #000;
       color: #22c55e;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      overflow: hidden; /* verhindert Scrollbalken durch absolute Elemente */
+      position: relative;
     }
+
+    /* Hintergrund-Layer: Sterne (Parallax) */
+    #stars, #stars2, #stars3 {
+      position: fixed;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      pointer-events: none; /* Klicks gehen durch */
+      z-index: 0;
+    }
+
+    #stars {
+      width: 1px; height: 1px;
+      background: transparent;
+      box-shadow: 
+        500px 300px #fff, 1200px 800px #fff, 300px 900px #fff, 1800px 400px #fff,
+        700px 1200px #fff, 1500px 600px #fff, 200px 200px #fff, 900px 1500px #fff,
+        1600px 100px #fff, 400px 1800px #fff, 1100px 700px #fff, 800px 1400px #fff,
+        1400px 300px #fff, 100px 1000px #fff, 1700px 900px #fff, 600px 500px #fff,
+        1300px 1100px #fff, 200px 1600px #fff, 1900px 200px #fff, 50px 800px #fff;
+      animation: moveStars 120s linear infinite;
+      opacity: 0.8;
+    }
+
+    #stars2 {
+      width: 2px; height: 2px;
+      background: transparent;
+      box-shadow: 
+        200px 400px #ddd, 800px 1000px #eee, 1400px 200px #fff, 300px 1300px #ccc,
+        1000px 500px #fff, 1700px 800px #eee, 600px 1500px #ddd, 1200px 300px #fff,
+        400px 700px #eee, 1500px 1200px #ccc, 900px 100px #fff, 1800px 600px #ddd;
+      animation: moveStars 200s linear infinite;
+      opacity: 0.6;
+    }
+
+    #stars3 {
+      width: 3px; height: 3px;
+      background: transparent;
+      box-shadow: 
+        100px 600px #aaa, 1600px 400px #bbb, 700px 1400px #ccc, 1300px 900px #ddd,
+        500px 200px #eee, 1900px 1100px #fff, 800px 800px #ccc, 200px 1700px #aaa;
+      animation: moveStars 300s linear infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes moveStars {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-2000px); } /* Loop durch Scroll nach oben */
+    }
+
+    /* Planeten (einfach, pixelig, bewegen sich langsam) */
+    .planet {
+      position: fixed;
+      border-radius: 50%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #planet1 { /* Blauer Planet mit Ring */
+      width: 80px; height: 80px;
+      background: radial-gradient(circle at 30% 30%, #4f9, #006, #003);
+      top: 20%; left: -100px;
+      animation: movePlanet1 180s linear infinite;
+      box-shadow: 0 0 30px #0af;
+    }
+
+    #planet1::after { /* Ring */
+      content: '';
+      position: absolute;
+      top: 50%; left: -40px;
+      width: 160px; height: 8px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: rotate(25deg);
+    }
+
+    #planet2 { /* Roter Planet */
+      width: 50px; height: 50px;
+      background: radial-gradient(circle at 40% 40%, #f66, #800, #400);
+      top: 60%; right: -80px;
+      animation: movePlanet2 240s linear infinite;
+      box-shadow: 0 0 25px #f33;
+    }
+
+    #planet3 { /* Grüner kleiner Planet */
+      width: 30px; height: 30px;
+      background: radial-gradient(circle at 50% 50%, #0f0, #060);
+      top: 10%; left: 30%;
+      animation: movePlanet3 150s linear infinite;
+      box-shadow: 0 0 15px #0f0;
+    }
+
+    @keyframes movePlanet1 { 0% { transform: translateX(0); } 100% { transform: translateX(200vw); } }
+    @keyframes movePlanet2 { 0% { transform: translateX(0); } 100% { transform: translateX(-200vw); } }
+    @keyframes movePlanet3 { 0% { transform: translate(0, 0); } 100% { transform: translate(150vw, 100vh); } }
+
+    /* Dein Content-Container – jetzt über den Sternen/Planeten */
     .container {
+      position: relative;
+      z-index: 1;
       max-width: 500px;
       width: 100%;
-      background: #18181b;
+      background: rgba(24,24,27,0.85); /* halbtransparent, damit Sterne durchscheinen */
       border: 4px solid #22c55e;
       border-radius: 16px;
       padding: 32px 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
       text-align: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(4px); /* optional: leichter Blur für Cyber-Look */
     }
+
     .container:hover {
       transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 20px 50px rgba(34,197,94,0.4);
+      box-shadow: 0 20px 50px rgba(34,197,94,0.5);
     }
+
     h1 {
       font-size: 2.5rem;
       color: #fbbf24;
@@ -39,11 +138,13 @@
       text-shadow: 3px 3px 0 #000;
       transition: color 0.4s ease;
     }
+
     .subtitle {
       font-size: 1.1rem;
       color: #86efac;
       margin-bottom: 32px;
     }
+
     #status {
       font-size: 1.8rem;
       font-weight: bold;
@@ -51,15 +152,18 @@
       min-height: 30px;
       transition: transform 0.3s ease;
     }
+
     #status.online {
       animation: pulse-glow 3s ease-in-out infinite;
     }
+
     @keyframes pulse-glow {
-      0%, 100% { text-shadow: 0 0 10px #22c55e, 0 0 20px #22c55e; transform: scale(1); }
-      50%      { text-shadow: 0 0 20px #86efac, 0 0 40px #86efac; transform: scale(1.05); }
+      0%, 100% { text-shadow: 0 0 10px #22c55e; transform: scale(1); }
+      50%      { text-shadow: 0 0 25px #86efac; transform: scale(1.05); }
     }
+
     .players-box {
-      background: #000;
+      background: rgba(0,0,0,0.7);
       border: 2px solid #22c55e;
       border-radius: 12px;
       padding: 20px;
@@ -67,16 +171,19 @@
       transition: all 0.3s ease;
       cursor: pointer;
     }
+
     .players-box:hover {
       transform: scale(1.08);
       border-color: #fbbf24;
       box-shadow: 0 0 25px rgba(251,191,36,0.5);
     }
+
     .players-label {
       font-size: 1rem;
       color: #a1a1aa;
       margin-bottom: 12px;
     }
+
     .players-display {
       font-size: 4.2rem;
       font-weight: bold;
@@ -87,13 +194,16 @@
       gap: 12px;
       transition: color 0.4s ease;
     }
+
     .players-box:hover .players-display {
       color: #fbbf24;
     }
+
     .slash {
       font-size: 3rem;
       color: #71717a;
     }
+
     #motd {
       font-size: 0.95rem;
       color: #fef08a;
@@ -102,11 +212,13 @@
       white-space: pre-wrap;
       word-wrap: break-word;
     }
+
     .footer {
       margin-top: 32px;
       font-size: 0.8rem;
       color: #71717a;
     }
+
     button {
       background: none;
       border: none;
@@ -116,11 +228,13 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     button:hover {
       color: #fbbf24;
       transform: scale(1.15);
       text-shadow: 0 0 10px #fbbf24;
     }
+
     @media (max-width: 400px) {
       h1 { font-size: 2rem; }
       .players-display { font-size: 3.5rem; }
@@ -129,6 +243,16 @@
   </style>
 </head>
 <body>
+  <!-- Hintergrund-Elemente -->
+  <div id="stars"></div>
+  <div id="stars2"></div>
+  <div id="stars3"></div>
+
+  <div class="planet" id="planet1"></div>
+  <div class="planet" id="planet2"></div>
+  <div class="planet" id="planet3"></div>
+
+  <!-- Dein Content -->
   <div class="container">
     <h1>DaKoolKidz</h1>
     <div class="subtitle">ATM10 v5.5</div>
